@@ -60,6 +60,63 @@ defmodule WbxmlTest do
              "<FolderSync><Status>1</Status><SyncKey>1</SyncKey><Changes><Count>32</Count><Add><ServerId>1</ServerId><ParentId>0</ParentId><DisplayName>Calendar</DisplayName><Type>8</Type></Add><Add><ServerId>2</ServerId><ParentId>0</ParentId><DisplayName>Contacts</DisplayName><Type>9</Type></Add><Add><ServerId>32</ServerId><ParentId>2</ParentId><DisplayName>Help</DisplayName><Type>14</Type></Add><Add><ServerId>31</ServerId><ParentId>2</ParentId><DisplayName>Suggested Contacts</DisplayName><Type>14</Type></Add><Add><ServerId>3</ServerId><ParentId>0</ParentId><DisplayName>Deleted Items</DisplayName><Type>4</Type></Add><Add><ServerId>11</ServerId><ParentId>3</ParentId><DisplayName>Another Folder 3</DisplayName><Type>12</Type></Add><Add><ServerId>27</ServerId><ParentId>11</ParentId><DisplayName>Test1</DisplayName><Type>12</Type></Add><Add><ServerId>28</ServerId><ParentId>27</ParentId><DisplayName>Test1sub</DisplayName><Type>12</Type></Add><Add><ServerId>29</ServerId><ParentId>11</ParentId><DisplayName>Test5</DisplayName><Type>12</Type></Add><Add><ServerId>30</ServerId><ParentId>29</ParentId><DisplayName>Test5sub</DisplayName><Type>12</Type></Add><Add><ServerId>26</ServerId><ParentId>3</ParentId><DisplayName>Test4</DisplayName><Type>12</Type></Add><Add><ServerId>4</ServerId><ParentId>0</ParentId><DisplayName>Drafts</DisplayName><Type>3</Type></Add><Add><ServerId>5</ServerId><ParentId>0</ParentId><DisplayName>Hier</DisplayName><Type>12</Type></Add><Add><ServerId>38</ServerId><ParentId>5</ParentId><DisplayName>from ol on osx</DisplayName><Type>1</Type></Add><Add><ServerId>7</ServerId><ParentId>0</ParentId><DisplayName>Inbox</DisplayName><Type>2</Type></Add><Add><ServerId>8</ServerId><ParentId>7</ParentId><DisplayName>Another Folder</DisplayName><Type>12</Type></Add><Add><ServerId>9</ServerId><ParentId>8</ParentId><DisplayName>127852Test</DisplayName><Type>12</Type></Add><Add><ServerId>33</ServerId><ParentId>7</ParentId><DisplayName>Another folder 1</DisplayName><Type>12</Type></Add><Add><ServerId>10</ServerId><ParentId>7</ParentId><DisplayName>Another Folder 2</DisplayName><Type>12</Type></Add><Add><ServerId>24</ServerId><ParentId>10</ParentId><DisplayName>Test2</DisplayName><Type>12</Type></Add><Add><ServerId>25</ServerId><ParentId>10</ParentId><DisplayName>Test3</DisplayName><Type>12</Type></Add><Add><ServerId>34</ServerId><ParentId>7</ParentId><DisplayName>Test Folder</DisplayName><Type>1</Type></Add><Add><ServerId>12</ServerId><ParentId>0</ParentId><DisplayName>Integration Test Emails</DisplayName><Type>12</Type></Add><Add><ServerId>13</ServerId><ParentId>0</ParentId><DisplayName>Journal</DisplayName><Type>11</Type></Add><Add><ServerId>14</ServerId><ParentId>0</ParentId><DisplayName>Junk E-Mail</DisplayName><Type>12</Type></Add><Add><ServerId>15</ServerId><ParentId>0</ParentId><DisplayName>Notes</DisplayName><Type>10</Type></Add><Add><ServerId>16</ServerId><ParentId>0</ParentId><DisplayName>Outbox</DisplayName><Type>6</Type></Add><Add><ServerId>17</ServerId><ParentId>0</ParentId><DisplayName>Sent Items</DisplayName><Type>5</Type></Add><Add><ServerId>35</ServerId><ParentId>0</ParentId><DisplayName>Sg test</DisplayName><Type>12</Type></Add><Add><ServerId>18</ServerId><ParentId>0</ParentId><DisplayName>Tasks</DisplayName><Type>7</Type></Add><Add><ServerId>39</ServerId><ParentId>0</ParentId><DisplayName>testvh</DisplayName><Type>12</Type></Add><Add><ServerId>RI</ServerId><ParentId>0</ParentId><DisplayName>RecipientInfo</DisplayName><Type>19</Type></Add></Changes></FolderSync>"
   end
 
+  test "Namespace declaration" do
+    xml =
+      """
+      <airsync:Sync xmlns:airsync="AirSync:" xmlns:calendar="Calendar:" xmlns:email="Email:" xmlns:airsyncbase="AirSyncBase:">
+        <airsync:Collections>
+          <airsync:Collection>
+            <airsync:SyncKey>0</airsync:SyncKey>
+            <airsync:CollectionId>1</airsync:CollectionId>
+            <airsync:Options>
+            <airsync:FilterType>0</airsync:FilterType>
+            <airsyncbase:BodyPreference>
+            <airsyncbase:Type>1</airsyncbase:Type>
+            </airsyncbase:BodyPreference>
+            </airsync:Options>
+          </airsync:Collection>
+        </airsync:Collections>
+      </airsync:Sync>
+      """
+
+    Wbxml.encode(xml)
+
+    # 1) test Namespace declaration (WbxmlTest)
+    #    test/wbxml_test.exs:63
+    #    ** (ArgumentError) errors were found at the given arguments:
+
+    #      * 1st argument: not an atom
+    #
+    #    code: Wbxml.encode(xml)
+    #    stacktrace:
+    #      :erlang.atom_to_binary([])
+    #      (wbxml 0.1.3) lib/wbxml/parse.ex:187: Wbxml.Parse.encode_node/3
+    #      (wbxml 0.1.3) lib/wbxml/parse.ex:162: Wbxml.Parse.encode/1
+    #      (wbxml 0.1.3) lib/wbxml.ex:12: Wbxml.encode/1
+    #      test/wbxml_test.exs:82: (test)
+  end
+
+  test "Namespace declaration simple" do
+    xml =
+      "<Provision xmlns:provision=\"Provision:\"></Provision>"
+
+    Wbxml.encode(xml)
+
+    #  1) test Namespace declaration simple (WbxmlTest)
+    #     test/wbxml_test.exs:99
+    #     ** (ArgumentError) errors were found at the given arguments:
+    #
+    #       * 1st argument: not an atom
+    #
+    #     code: Wbxml.encode(xml)
+    #     stacktrace:
+    #       :erlang.atom_to_binary([])
+    #       (wbxml 0.1.3) lib/wbxml/parse.ex:187: Wbxml.Parse.encode_node/3
+    #       (wbxml 0.1.3) lib/wbxml/parse.ex:162: Wbxml.Parse.encode/1
+    #       (wbxml 0.1.3) lib/wbxml.ex:12: Wbxml.encode/1
+    #       test/wbxml_test.exs:103: (test)
+  end
+
   test "encode provision xmlns with :" do
     xml =
       "<Provision xmlns=\"Provision:\"><DeviceInformation xmlns=\"Settings:\"><Set><Model>Samsung</Model><OS>Android 8.1.0</OS><UserAgent>Samsung/Android-8.1.0</UserAgent></Set></DeviceInformation><Policies><Policy><PolicyType>MS-EAS-Provisioning-WBXML</PolicyType></Policy></Policies></Provision>"
